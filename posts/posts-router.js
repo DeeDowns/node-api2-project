@@ -13,13 +13,15 @@ router.get('/', (req, res) => {
     .catch(error => {
         res.status(500).json({ error: 'The posts information could not be retrieved.'})
     })
+
 })
 
 //GET all posts by id
 router.get('/:id', (req, res) => {
     Posts.findById(req.params.id)
     .then(post => {
-        if(post) {
+        console.log(post) 
+        if(post.length > 0) {
             res.status(200).json(post)
         } else {
             res.status(404).json({ message: 'The post with the specified ID does not exist.'})
@@ -28,14 +30,13 @@ router.get('/:id', (req, res) => {
     .catch(error => {
         res.status(500).json({ error: 'The post information could not be retrieved.'})
     })
- 
 })
 
 //GET post comments
 router.get('/:id/comments', (req, res) => {
     Posts.findPostComments(req.params.id)
     .then(comment => {
-        if(comment) {
+        if(comment.length > 0) {
             res.status(200).json(comment)
         } else {
             res.status(404).json({ message: 'The post with the specified ID does not exist.'})
@@ -48,16 +49,23 @@ router.get('/:id/comments', (req, res) => {
 
 //POST new post
 router.post('/', (req, res) => {
-    Posts.insert(req.body)
-    .then(post => {
-        // console.log(req.body)
-       req.body.title && req.body.contents ? res.status(201).json(post) : res.status(400).json({ errorMessage: 'Please provide title and contents for the post.'})
-    })
-    .catch(error => {
+    // Posts.insert(req.body)
+    // .then(post => {
+    //     // console.log(req.body)
+    //    req.body.title || req.body.contents ? res.status(201).json(post) : res.status(400).json({ errorMessage: 'Please provide title and contents for the post.'})
+    // })
+    // .catch(error => {
+    //     res.status(500).json({ error: 'There was an error while saving the post to the database'})
+    // })
+
+    if(!req.body.title || !req.body.contents) {
+        res.status(400).json({ errorMessage: 'Please provide title and contents for the post.'})
+    } else if( req.body.title && req.body.contents) {
+        Posts.insert(req.body)
+        res.status(201).json(req.body) 
+    } else {
         res.status(500).json({ error: 'There was an error while saving the post to the database'})
-    })
-
-
+    }
 })
 
 //POST new comment post by id
