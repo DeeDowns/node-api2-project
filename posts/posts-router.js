@@ -70,16 +70,26 @@ router.post('/', (req, res) => {
 
 //POST new comment post by id
 router.post('/:id/comments', (req, res) => {
-    Posts.insertComment(req.body)
-    .then(comment => {
-        console.log(req.body)
-        req.body.text ? res.status(201).json(comment) : res.status(400).json({ message: 'Please provide text for the comment.'})
-        // req.body. ? res.status(201).json(comment) : res.status(400).json({ message: 'Please provide text for the comment.'})
-    })
-    .catch(error => {
-        res.status(500).json({ error: "There was an error while saving the comment to the database"})
-    })
+    // Posts.insertComment(req.body)
+    // .then(post => {
+    //     console.log(post)
+    //     console.log('insert comment', req.body)
+    //     if (post.length > 0) {
+    //         res.status(201).json(post)
+    //     } else {
+    //         res.status(404).json({ message: "The post with the specified ID does not exist." })
+    //     } 
+
+    //     if (!req.body.text) {
+    //         res.status(400).json({ errorMessage: "Please provide text for the comment." })
+    //     }
+    // })
+    // .catch(error => {
+    //     res.status(500).json({ error: "There was an error while saving the comment to the database"})
+    // })
+
 })
+
 
 //DELETE post
 router.delete('/:id', (req, res) => {
