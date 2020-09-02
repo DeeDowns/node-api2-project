@@ -100,14 +100,15 @@ router.post('/:post_id/comments', (req, res) => {
 router.put('/:id', (req, res) => {
     const { title, contents } = req.body
     const { id } = req.params
-    if(!title && !contents) {
-        return res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
-    }
+   
+    console.log(title, contents)
     Posts.update(id, {title, contents})
-    .then(post => {
-        console.log('put',post)
-        if(post) {
-            res.status(200).json(post)
+    .then(updatedPost => {
+        console.log('put',updatedPost)
+        if(!title && !contents) {
+            return res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
+        } else if(updatedPost) {
+            res.status(200).json(updatedPost)
         } else {
             res.status(404).json({ message: "The post with the specified ID does not exist." })
         }
