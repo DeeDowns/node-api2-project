@@ -51,8 +51,13 @@ router.get('/:id/comments', (req, res) => {
 router.post('/', (req, res) => {
     // Posts.insert(req.body)
     // .then(post => {
-    //     // console.log(req.body)
-    //    req.body.title || req.body.contents ? res.status(201).json(post) : res.status(400).json({ errorMessage: 'Please provide title and contents for the post.'})
+    //     // console.log(post)
+    //     // console.log(req.body.title.length)
+    //     if(req.body.title.length <= 0 || req.body.contents.length <= 0) {
+    //         return res.status(400).json({ errorMessage: 'Please provide title and contents for the post.'})
+    //     } else if(req.body.title && req.body.contents) {
+    //         res.status(201).json(req.body) 
+    //     } 
     // })
     // .catch(error => {
     //     res.status(500).json({ error: 'There was an error while saving the post to the database'})
@@ -89,6 +94,27 @@ router.post('/:post_id/comments', (req, res) => {
         res.status(500).json({ error: "There was an error while saving the comment to the database"})
     })
 
+})
+
+//PUT edit post
+router.put('/:id', (req, res) => {
+    const { title, contents } = req.body
+    const { id } = req.params
+    if(!title && !contents) {
+        return res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
+    }
+    Posts.update(id, {title, contents})
+    .then(post => {
+        console.log('put',post)
+        if(post) {
+            res.status(200).json(post)
+        } else {
+            res.status(404).json({ message: "The post with the specified ID does not exist." })
+        }
+    }).catch(error => {
+        console.log(error)
+        res.status(500).json({ error: "The post information could not be modified." })
+    })
 })
 
 
